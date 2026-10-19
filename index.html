@@ -163,10 +163,32 @@
 
       <nav class="actions" aria-label="Contact actions">
         <a class="action" href="tel:+91-7793966718">Call</a>
-        <a class="action" href="mailto:founders@meggyjunny.com">Email</a>
+        <a class="action" id="email-action" href="mailto:founders@meggyjunny.com">Email</a>
         <a class="action secondary" href="https://www.meggyjunny.com">Visit website</a>
         <a class="action secondary" href="charan-puladas.vcf" download>Save contact</a>
       </nav>
     </main>
+    <script>
+      (() => {
+        const emailAction = document.getElementById('email-action');
+        const recipient = 'founders@meggyjunny.com';
+
+        emailAction.addEventListener('click', () => {
+          let handedOff = false;
+          const cancelFallback = () => { handedOff = true; };
+
+          window.addEventListener('blur', cancelFallback, { once: true });
+          document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') cancelFallback();
+          }, { once: true });
+
+          window.setTimeout(() => {
+            if (!handedOff && document.visibilityState === 'visible') {
+              window.location.assign(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}`);
+            }
+          }, 1500);
+        });
+      })();
+    </script>
   </body>
 </html>
